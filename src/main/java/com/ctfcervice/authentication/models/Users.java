@@ -1,16 +1,18 @@
 package com.ctfcervice.authentication.models;
 
-import javax.persistence.*;
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
+@Data
 public class Users {
-
-    public Users(){
-
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,30 +33,5 @@ public class Users {
 
     private boolean admin;
 
-    public Users(String username, String email, String password) {
-        this.username = username;
-        this.mail = email;
-        this.password_hash = password;
-        this.admin = false;
-    }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public String getPassword_hash() {
-        return password_hash;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
 }

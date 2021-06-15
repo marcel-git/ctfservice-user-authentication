@@ -1,17 +1,11 @@
 package com.ctfcervice.authentication.controllers;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.ctfcervice.authentication.repository.UserRepository;
-import javax.validation.Valid;
-
 import com.ctfcervice.authentication.models.Users;
 import com.ctfcervice.authentication.payload.JwtResponse;
 import com.ctfcervice.authentication.payload.LoginRequest;
 import com.ctfcervice.authentication.payload.MessageResponse;
 import com.ctfcervice.authentication.payload.SignupRequest;
+import com.ctfcervice.authentication.repository.UserRepository;
 import com.ctfcervice.authentication.security.services.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,11 +15,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -60,7 +55,7 @@ public class AuthController {
                 authentication.getName())
                 .claim("authorities",roles)
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now +  3600000 ))
+                //.setExpiration(new Date(now +  3600000 ))
                 .signWith(SignatureAlgorithm.HS512, "secret".getBytes())
                 .compact();
 
@@ -82,10 +77,10 @@ public class AuthController {
         }
 
         // Create new user's account
-        Users user = new Users(signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
-
+        Users user = new Users();
+        user.setUsername(signUpRequest.getUsername());
+        user.setMail(signUpRequest.getEmail());
+        user.setPassword_hash(encoder.encode(signUpRequest.getPassword()));
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Users registered successfully!"));
